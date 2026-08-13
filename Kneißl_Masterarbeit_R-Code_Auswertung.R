@@ -6885,7 +6885,6 @@ cor_vtd_gesamt_sb12 <- cor.test(
 
 cor_vtd_gesamt_sb12
 
-
 # ----------------------------------------------------------
 # 22.5 Tabellen und Effektplot zu Forschungsfrage 5
 # Zusammenhang mit Wunsch nach Stimmtraining
@@ -6921,13 +6920,13 @@ ff5_ergebnisse <- tibble(
   ),
   
   p_Spearman = c(
-    "<0,001",
-    "<0,001",
-    "<0,001",
-    "0,001",
-    "0,145",
-    "<0,001",
-    "0,005"
+    "< .001",
+    "< .001",
+    "< .001",
+    ".001",
+    ".145",
+    "< .001",
+    ".005"
   ),
   
   Beta = c(
@@ -6941,13 +6940,13 @@ ff5_ergebnisse <- tibble(
   ),
   
   p_Regression = c(
-    "<0,001",
-    "<0,001",
-    "<0,001",
-    "0,001",
-    "0,151",
-    "<0,001",
-    "0,002"
+    "< .001",
+    "< .001",
+    "< .001",
+    ".001",
+    ".151",
+    "< .001",
+    ".002"
   )
 )
 
@@ -6958,7 +6957,7 @@ ff5_ergebnisse <- tibble(
 
 ff5_tabelle_spearman <- ff5_ergebnisse %>%
   mutate(
-    `Spearman-ρ` = gsub("\\.", ",", sprintf("%.3f", Spearman_rho))
+    `Spearman-ρ` = sub("^(-?)0\\.", "\\1.", sprintf("%.3f", Spearman_rho))
   ) %>%
   select(
     Variable,
@@ -7264,27 +7263,27 @@ tabelle_tests_sprech_spiel_training <- tibble(
     ifelse(
       wilcox_gesamt$p.value < .001,
       "< .001",
-      sprintf("%.3f", wilcox_gesamt$p.value)
+      sub("^0\\.", ".", sprintf("%.3f", wilcox_gesamt$p.value))
     ),
     ifelse(
       wilcox_chef$p.value < .001,
       "< .001",
-      sprintf("%.3f", wilcox_chef$p.value)
+      sub("^0\\.", ".", sprintf("%.3f", wilcox_chef$p.value))
     ),
     ifelse(
       wilcox_co$p.value < .001,
       "< .001",
-      sprintf("%.3f", wilcox_co$p.value)
+      sub("^0\\.", ".", sprintf("%.3f", wilcox_co$p.value))
     ),
     ifelse(
       wilcox_torwart$p.value < .001,
       "< .001",
-      sprintf("%.3f", wilcox_torwart$p.value)
+      sub("^0\\.", ".", sprintf("%.3f", wilcox_torwart$p.value))
     ),
     ifelse(
       wilcox_andere$p.value < .001,
       "< .001",
-      sprintf("%.3f", wilcox_andere$p.value)
+      sub("^0\\.", ".", sprintf("%.3f", wilcox_andere$p.value))
     )
   )
 )
@@ -7585,27 +7584,27 @@ tabelle_tests_laut_spiel_training <- tibble(
     ifelse(
       wilcox_laut_gesamt$p.value < .001,
       "< .001",
-      sprintf("%.3f", wilcox_laut_gesamt$p.value)
+      sub("^0\\.", ".", sprintf("%.3f", wilcox_laut_gesamt$p.value))
     ),
     ifelse(
       wilcox_laut_chef$p.value < .001,
       "< .001",
-      sprintf("%.3f", wilcox_laut_chef$p.value)
+      sub("^0\\.", ".", sprintf("%.3f", wilcox_laut_chef$p.value))
     ),
     ifelse(
       wilcox_laut_co$p.value < .001,
       "< .001",
-      sprintf("%.3f", wilcox_laut_co$p.value)
+      sub("^0\\.", ".", sprintf("%.3f", wilcox_laut_co$p.value))
     ),
     ifelse(
       wilcox_laut_torwart$p.value < .001,
       "< .001",
-      sprintf("%.3f", wilcox_laut_torwart$p.value)
+      sub("^0\\.", ".", sprintf("%.3f", wilcox_laut_torwart$p.value))
     ),
     ifelse(
       wilcox_laut_andere$p.value < .001,
       "< .001",
-      sprintf("%.3f", wilcox_laut_andere$p.value)
+      sub("^0\\.", ".", sprintf("%.3f", wilcox_laut_andere$p.value))
     )
   )
 )
@@ -8147,33 +8146,33 @@ regression_tabelle <- tibble(
   ),
   
   VTD = c(
-    "−0,183 (0,068)",
-    "0,132 (0,208)",
-    "0,099 (0,333)"
+    "−.183 (.068)",
+    ".132 (.208)",
+    ".099 (.333)"
   ),
   
   `VHI-9i` = c(
-    "−0,112 (0,259)",
-    "0,179 (0,088)",
-    "−0,022 (0,827)"
+    "−.112 (.259)",
+    ".179 (.088)",
+    "−.022 (.827)"
   ),
   
   FESS_BE = c(
-    "0,102 (0,304)",
-    "−0,037 (0,722)",
-    "0,060 (0,556)"
+    ".102 (.304)",
+    "−.037 (.722)",
+    ".060 (.556)"
   ),
   
   FESS_BU = c(
-    "−0,009 (0,929)",
-    "0,121 (0,246)",
-    "−0,042 (0,679)"
+    "−.009 (.929)",
+    ".121 (.246)",
+    "−.042 (.679)"
   ),
   
   FESS_SE = c(
-    "−0,004 (0,968)",
-    "0,195 (0,061)",
-    "−0,081 (0,423)"
+    "−.004 (.968)",
+    ".195 (.061)",
+    "−.081 (.423)"
   )
 )
 
@@ -8374,12 +8373,20 @@ ergebnisse <- lapply(names(modelle), function(name) {
     p = ifelse(
       p_modell < .001,
       "< .001",
-      sprintf("%.3f", p_modell)
+      sub("^0\\.", ".", sprintf("%.3f", p_modell))
     ),
     
-    R2 = round(s$r.squared, 3),
+    R2 = sub(
+      "^(-?)0\\.",
+      "\\1.",
+      sprintf("%.3f", s$r.squared)
+    ),
     
-    Adj_R2 = round(s$adj.r.squared, 3),
+    Adj_R2 = sub(
+      "^(-?)0\\.",
+      "\\1.",
+      sprintf("%.3f", s$adj.r.squared)
+    ),
     
     VIF_Bereich = paste0(
       round(min(vif_werte), 2),
@@ -8741,7 +8748,11 @@ tabelle_f1_daten <- tabelle_f1_daten %>%
     M = round(M, 2),
     SD = round(SD, 2),
     Median = round(Median, 2),
-    Cronbach_Alpha = round(Cronbach_Alpha, 2)
+    Cronbach_Alpha = sub(
+      "^(-?)0\\.",
+      "\\1.",
+      sprintf("%.2f", Cronbach_Alpha)
+    )
   )
 
 # 8. Tabelle erstellen
@@ -8940,11 +8951,19 @@ tabelle_berufserfahrung <- tibble(
 
 tabelle_berufserfahrung_gt <- tabelle_berufserfahrung %>%
   mutate(
-    `Spearman-ρ` = sprintf("%.3f", rho),
+    `Spearman-ρ` = sub(
+      "^(-?)0\\.",
+      "\\1.",
+      sprintf("%.3f", rho)
+    ),
     p = ifelse(
       p < .001,
       "< .001",
-      sprintf("%.3f", p)
+      sub(
+        "^0\\.",
+        ".",
+        sprintf("%.3f", p)
+      )
     )
   ) %>%
   select(
@@ -9231,18 +9250,17 @@ f3_training_tabelle <- f3_training_ergebnisse %>%
       as.character(n)
     ),
     
-    # rho mit drei Nachkommastellen und Dezimalkomma
+    # rho mit drei Nachkommastellen, Dezimalpunkt
+    # und ohne führende Null
     
     `Spearman-ρ` = ifelse(
       is.na(rho),
       "",
-      sprintf("%.3f", rho)
-    ),
-    
-    `Spearman-ρ` = gsub(
-      "\\.",
-      ",",
-      `Spearman-ρ`
+      sub(
+        "^(-?)0\\.",
+        "\\1.",
+        sprintf("%.3f", rho)
+      )
     ),
     
     # typografisches Minuszeichen
@@ -9253,14 +9271,14 @@ f3_training_tabelle <- f3_training_ergebnisse %>%
       `Spearman-ρ`
     ),
     
-    # p-Werte
+    # p-Werte mit Dezimalpunkt und ohne führende Null
     
     p = case_when(
       is.na(p_wert) ~ "",
-      p_wert < .001 ~ "< 0,001",
-      TRUE ~ gsub(
-        "\\.",
-        ",",
+      p_wert < .001 ~ "< .001",
+      TRUE ~ sub(
+        "^0\\.",
+        ".",
         sprintf("%.3f", p_wert)
       )
     )
@@ -9432,6 +9450,7 @@ gtsave(
   zoom = 3,
   expand = 5
 )
+
 # ----------------------------------------------------------
 # 33.2 Sprechanteil im Spiel × stimmbezogene Variablen
 # ----------------------------------------------------------
@@ -9554,13 +9573,11 @@ f3_spiel_tabelle <- f3_spiel_ergebnisse %>%
     `Spearman-ρ` = ifelse(
       is.na(rho),
       "",
-      sprintf("%.3f", rho)
-    ),
-    
-    `Spearman-ρ` = gsub(
-      "\\.",
-      ",",
-      `Spearman-ρ`
+      sub(
+        "^(-?)0\\.",
+        "\\1.",
+        sprintf("%.3f", rho)
+      )
     ),
     
     `Spearman-ρ` = gsub(
@@ -9571,10 +9588,10 @@ f3_spiel_tabelle <- f3_spiel_ergebnisse %>%
     
     p = case_when(
       is.na(p_wert) ~ "",
-      p_wert < .001 ~ "< 0,001",
-      TRUE ~ gsub(
-        "\\.",
-        ",",
+      p_wert < .001 ~ "< .001",
+      TRUE ~ sub(
+        "^0\\.",
+        ".",
         sprintf("%.3f", p_wert)
       )
     )
@@ -9871,13 +9888,11 @@ f4_lautstaerke_training_tabelle <-
     `Spearman-ρ` = ifelse(
       is.na(rho),
       "",
-      sprintf("%.3f", rho)
-    ),
-    
-    `Spearman-ρ` = gsub(
-      "\\.",
-      ",",
-      `Spearman-ρ`
+      sub(
+        "^(-?)0\\.",
+        "\\1.",
+        sprintf("%.3f", rho)
+      )
     ),
     
     `Spearman-ρ` = gsub(
@@ -9888,10 +9903,10 @@ f4_lautstaerke_training_tabelle <-
     
     p = case_when(
       is.na(p_wert) ~ "",
-      p_wert < .001 ~ "< 0,001",
-      TRUE ~ gsub(
-        "\\.",
-        ",",
+      p_wert < .001 ~ "< .001",
+      TRUE ~ sub(
+        "^0\\.",
+        ".",
         sprintf("%.3f", p_wert)
       )
     )
@@ -10189,13 +10204,11 @@ f4_lautstaerke_spiel_tabelle <-
     `Spearman-ρ` = ifelse(
       is.na(rho),
       "",
-      sprintf("%.3f", rho)
-    ),
-    
-    `Spearman-ρ` = gsub(
-      "\\.",
-      ",",
-      `Spearman-ρ`
+      sub(
+        "^(-?)0\\.",
+        "\\1.",
+        sprintf("%.3f", rho)
+      )
     ),
     
     `Spearman-ρ` = gsub(
@@ -10206,10 +10219,10 @@ f4_lautstaerke_spiel_tabelle <-
     
     p = case_when(
       is.na(p_wert) ~ "",
-      p_wert < .001 ~ "< 0,001",
-      TRUE ~ gsub(
-        "\\.",
-        ",",
+      p_wert < .001 ~ "< .001",
+      TRUE ~ sub(
+        "^0\\.",
+        ".",
         sprintf("%.3f", p_wert)
       )
     )
